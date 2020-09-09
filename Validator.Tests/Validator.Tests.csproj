@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Lamar" Version="4.3.1" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+      <PackageReference Include="NUnit" Version="3.12.0" />
+      <PackageReference Include="Shouldly" Version="3.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Validator.Core\Validator.Core.csproj" />
+      <ProjectReference Include="..\Validator.Samples\Validator.Samples.csproj" />
+    </ItemGroup>
+
+</Project>

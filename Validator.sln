@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validator.Core", "Validator.Core\Validator.Core.csproj", "{21A3C31E-0789-40A0-817C-B06A3B5CF1FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validator.Tests", "Validator.Tests\Validator.Tests.csproj", "{5F8F943C-83BF-4287-8EBD-2298EA54906E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validator.Samples", "Validator.Samples\Validator.Samples.csproj", "{C02B6ECF-03AD-41BC-925C-A1FB11A8E37D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21A3C31E-0789-40A0-817C-B06A3B5CF1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A3C31E-0789-40A0-817C-B06A3B5CF1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A3C31E-0789-40A0-817C-B06A3B5CF1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A3C31E-0789-40A0-817C-B06A3B5CF1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F8F943C-83BF-4287-8EBD-2298EA54906E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F8F943C-83BF-4287-8EBD-2298EA54906E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8F943C-83BF-4287-8EBD-2298EA54906E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F8F943C-83BF-4287-8EBD-2298EA54906E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C02B6ECF-03AD-41BC-925C-A1FB11A8E37D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C02B6ECF-03AD-41BC-925C-A1FB11A8E37D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C02B6ECF-03AD-41BC-925C-A1FB11A8E37D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C02B6ECF-03AD-41BC-925C-A1FB11A8E37D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
