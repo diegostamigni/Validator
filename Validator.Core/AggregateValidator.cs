@@ -32,13 +32,8 @@ namespace Validator.Core
 					result.ValidationErrors.AddRange(fResult.ValidationErrors);
 					if (!fResult.IsValid)
 					{
-						break;
+						return result;
 					}
-				}
-
-				if (!result.IsValid)
-				{
-					return result;
 				}
 			}
 
