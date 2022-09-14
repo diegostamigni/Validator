@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AnalysisLevel>latest-Recommended</AnalysisLevel>
+        <LangVersion>latest</LangVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>Validator.Abstractions</PackageId>
+        <Description>Validator.Abstractions</Description>
+        <Version>0.0.1</Version>
+        <Authors>Diego Stamigni</Authors>
+        <Company>Area Engineering Ltd</Company>
+        <PackageTags>validator;validation</PackageTags>
+    </PropertyGroup>
+
+</Project>

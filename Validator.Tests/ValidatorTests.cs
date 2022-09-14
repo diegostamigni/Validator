@@ -1,120 +1,126 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Lamar;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Shouldly;
-using Validator.Core;
-using Validator.Core.Abstractions;
-using Validator.Samples;
-using Validator.Samples.DependencyInjection;
+using Validator.Abstractions;
 
-namespace Validator.Tests
+namespace Validator.Tests;
+
+[TestFixture]
+public class ValidatorTests
 {
-	[TestFixture]
-	public class ValidatorTests
-	{
-		private Container container;
+	private Container container;
 
-		[OneTimeSetUp]
-		public void OneTimeSetUp()
+	[OneTimeSetUp]
+	public void OneTimeSetUp()
+	{
+		this.container = new(cfg =>
 		{
-			this.container = new Container(cfg =>
+			cfg.Scan(s =>
 			{
-				cfg.IncludeRegistry<SamplesRegistry>();
+				s.AssemblyContainingType<HelloItemBusinessRuleValidator>();
+				s.WithDefaultConventions(ServiceLifetime.Scoped);
+				s.AddAllTypesOf(typeof(IValidator<>), ServiceLifetime.Scoped);
 			});
 
-			var containerScan = this.container.WhatDidIScan();
-			Console.WriteLine(containerScan);
+			cfg.For(typeof(IAggregateValidator<>))
+				.Use(typeof(AggregateValidator<>))
+				.Lifetime = ServiceLifetime.Scoped;
+		});
 
-			var containerContent = this.container.WhatDoIHave();
-			Console.WriteLine(containerContent);
-		}
+		var containerScan = this.container.WhatDidIScan();
+		Console.WriteLine(containerScan);
 
-		[Test]
-		public void AssertConfigurationIsValid()
+		var containerContent = this.container.WhatDoIHave();
+		Console.WriteLine(containerContent);
+	}
+
+	[Test]
+	public void AssertConfigurationIsValid()
+	{
+		this.container.AssertConfigurationIsValid();
+	}
+
+	[Test]
+	public async Task ShouldResolveFieldValidator()
+	{
+		var item = new HelloItem
 		{
-			this.container.AssertConfigurationIsValid();
-		}
+			FirstName = "Bruce",
+			LastName = "Wayne",
+			DateOfBirth = DateTime.Today.AddYears(-40)
+		};
 
-		[Test]
-		public async Task ShouldResolveFieldValidator()
+		var validator = this.container.GetInstance<IFieldValidator<HelloItem>>();
+		var result = await validator.ValidateAsync(item);
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Test]
+	public async Task ShouldResolveFieldValidator_ShouldThrow()
+	{
+		var item = new HelloItem
 		{
-			var item = new HelloItem
-			{
-				FirstName = "Bruce",
-				LastName = "Wayne",
-				DateOfBirth = DateTime.Today.AddYears(-40)
-			};
+			FirstName = "Bruce",
+			LastName = "Wayne",
+			DateOfBirth = DateTime.Today.AddYears(-40)
+		};
 
-			var validator = this.container.GetInstance<IFieldValidator<HelloItem>>();
-			var result = await validator.ValidateAsync(item);
-			result.IsValid.ShouldBeFalse();
-		}
+		var validator = this.container.GetInstance<IFieldValidator<HelloItem>>();
+		var result = await validator.ValidateAsync(item);
+		result.IsValid.ShouldBeFalse();
 
-		[Test]
-		public async Task ShouldResolveFieldValidator_ShouldThrow()
+		var ex = Should.Throw<ValidationException>(result.ThrowIfInvalid);
+		ex.ValidationErrors.ShouldNotBeEmpty();
+	}
+
+	[Test]
+	public async Task ShouldResolveBusinessRuleValidator()
+	{
+		var item = new HelloItem
 		{
-			var item = new HelloItem
-			{
-				FirstName = "Bruce",
-				LastName = "Wayne",
-				DateOfBirth = DateTime.Today.AddYears(-40)
-			};
+			FirstName = "Bruce",
+			LastName = "Wayne",
+			DateOfBirth = DateTime.Today.AddYears(-40)
+		};
 
-			var validator = this.container.GetInstance<IFieldValidator<HelloItem>>();
-			var result = await validator.ValidateAsync(item);
-			result.IsValid.ShouldBeFalse();
+		var validator = this.container.GetInstance<IBusinessRuleValidator<HelloItem>>();
+		var result = await validator.ValidateAsync(item);
+		result.IsValid.ShouldBeTrue();
+	}
 
-			var ex = Should.Throw<ValidationException>(result.ThrowIfInvalid);
-			ex.ValidationErrors.ShouldNotBeEmpty();
-		}
-
-		[Test]
-		public async Task ShouldResolveBusinessRuleValidator()
+	[Test]
+	public async Task ShouldResolveAggregateValidator()
+	{
+		var item = new HelloItem
 		{
-			var item = new HelloItem
-			{
-				FirstName = "Bruce",
-				LastName = "Wayne",
-				DateOfBirth = DateTime.Today.AddYears(-40)
-			};
+			FirstName = "Bruce",
+			LastName = "Wayne",
+			DateOfBirth = DateTime.Today.AddYears(-40)
+		};
 
-			var validator = this.container.GetInstance<IBusinessRuleValidator<HelloItem>>();
-			var result = await validator.ValidateAsync(item);
-			result.IsValid.ShouldBeTrue();
-		}
+		var validator = this.container.GetInstance<IAggregateValidator<HelloItem>>();
+		var result = await validator.ValidateAsync(item);
+		result.IsValid.ShouldBeFalse();
+	}
 
-		[Test]
-		public async Task ShouldResolveAggregateValidator()
+	[Test]
+	public async Task ShouldResolveAggregateValidator_ShouldThrow()
+	{
+		var item = new HelloItem
 		{
-			var item = new HelloItem
-			{
-				FirstName = "Bruce",
-				LastName = "Wayne",
-				DateOfBirth = DateTime.Today.AddYears(-40)
-			};
+			FirstName = "Bruce",
+			LastName = "Wayne",
+			DateOfBirth = DateTime.Today.AddYears(-40)
+		};
 
-			var validator = this.container.GetInstance<IAggregateValidator<HelloItem>>();
-			var result = await validator.ValidateAsync(item);
-			result.IsValid.ShouldBeFalse();
-		}
+		var validator = this.container.GetInstance<IAggregateValidator<HelloItem>>();
+		var result = await validator.ValidateAsync(item);
+		result.IsValid.ShouldBeFalse();
 
-		[Test]
-		public async Task ShouldResolveAggregateValidator_ShouldThrow()
-		{
-			var item = new HelloItem
-			{
-				FirstName = "Bruce",
-				LastName = "Wayne",
-				DateOfBirth = DateTime.Today.AddYears(-40)
-			};
-
-			var validator = this.container.GetInstance<IAggregateValidator<HelloItem>>();
-			var result = await validator.ValidateAsync(item);
-			result.IsValid.ShouldBeFalse();
-
-			var ex = Should.Throw<ValidationException>(result.ThrowIfInvalid);
-			ex.ValidationErrors.ShouldNotBeEmpty();
-		}
+		var ex = Should.Throw<ValidationException>(result.ThrowIfInvalid);
+		ex.ValidationErrors.ShouldNotBeEmpty();
 	}
 }
